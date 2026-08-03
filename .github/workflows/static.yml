@@ -22,3 +22,4 @@ jobs:
           publish_dir: .
           publish_branch: gh-pages
           cname: jasonend.cloud
+          exclude_assets: '.github,.kiro,.venv,__pycache__,clean_html.py,test_*.py'
