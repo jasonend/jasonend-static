@@ -73,30 +73,30 @@ Convert the WordPress Simply Static export into a deployable GitHub Pages site b
   - Run `python -m pytest test_repo_state.py` and confirm all unit tests pass. Ask the user if questions arise before continuing.
 
 - [ ] 8. Commit and push to trigger deployment
-  - [-] 8.1 Stage all changes and create the migration commit
+  - [x] 8.1 Stage all changes and create the migration commit
     - Run `git add -A` to stage all deletions, modifications, and new files
     - Run `git commit -m "Convert to GitHub Pages static site"` to create the migration commit
     - _Requirements: 4.7_
 
-  - [~] 8.2 Push `main` to trigger the GitHub Actions workflow
+  - [ ] 8.2 Push `main` to trigger the GitHub Actions workflow
     - Run `git push origin main`
     - Confirm the workflow fires in the GitHub Actions tab and the `gh-pages` branch is created or updated
     - _Requirements: 4.1, 4.4_
 
 - [ ] 9. Set up secondary domain (theenderles.com)
-  - [~] 9.1 Create a second GitHub repository with the same content
+  - [x] 9.1 Create a second GitHub repository with the same content
     - Initialize a new local directory, copy all retained files from the primary repository (exclude `.git`)
     - Replace the `CNAME` file content with `theenderles.com`
     - Update `.github/workflows/static.yml` to set `cname: theenderles.com`
     - _Requirements: 5.2, 5.3_
 
-  - [~] 9.2 Push the secondary repository and configure DNS
+  - [ ] 9.2 Push the secondary repository and configure DNS
     - Push the secondary repository to a new GitHub remote
     - Configure the `theenderles.com` DNS CNAME record to point to `<user>.github.io`
     - Confirm the secondary workflow fires and the site is reachable at `https://theenderles.com`
     - _Requirements: 5.2, 5.3, 5.4_
 
-- [~] 10. Final checkpoint — confirm both domains are live
+- [ ] 10. Final checkpoint — confirm both domains are live
   - Ensure all tests pass and both domains serve the expected content. Ask the user if questions arise.
 
 ## Notes
