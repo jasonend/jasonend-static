@@ -1,3 +1,4 @@
-pytest
-hypothesis
-Pillow
+# Pinned so CI stays reproducible. Bump deliberately.
+pytest==9.1.1
+hypothesis==6.168.5
+Pillow==12.3.0
