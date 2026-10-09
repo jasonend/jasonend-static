@@ -16,6 +16,8 @@ PATTERNS = [
     r'<script[^>]*id="@wordpress/block-library/navigation/view-js-module"[^>]*></script>\n?',
     # wp-emoji-settings block + immediately following emoji loader script (Requirements 2.7)
     r'<script id="wp-emoji-settings"[^>]*>.*?</script>\s*<script type="module">\s*.*?//# sourceURL=/wp-includes/js/wp-emoji-loader\.min\.js\s*</script>\n?',
+    # shortlink tag pointing at dynamic /?p=N URLs (dead on static hosting)
+    r'<link rel="shortlink"[^>]*href="/\?p=\d+"[^>]*>\n?',
 ]
 
 
