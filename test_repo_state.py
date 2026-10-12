@@ -93,35 +93,32 @@ class TestRequiredHTMLPages:
 
 
 # ---------------------------------------------------------------------------
-# Requirements 4.1, 4.2 – GitHub Actions deployment workflow
+# Requirements 4.1, 4.2 – Cloudflare Pages hosting (no GitHub Pages deploy)
 # ---------------------------------------------------------------------------
 
-class TestDeploymentWorkflow:
-    """Validates: Requirements 4.1, 4.2"""
+class TestPagesHosting:
+    """Validates: Requirements 4.1, 4.2 (Cloudflare Pages, Git-connected)."""
 
-    @pytest.fixture(scope="class")
-    @classmethod
-    def workflow_content(cls):
+    def test_legacy_gh_pages_workflow_removed(self):
+        """static.yml (peaceiris gh-pages deploy) must not exist."""
         workflow_path = REPO_ROOT / ".github" / "workflows" / "static.yml"
-        assert workflow_path.exists(), (
-            ".github/workflows/static.yml does not exist"
-        )
-        return workflow_path.read_text()
-
-    def test_workflow_uses_peaceiris_action(self, workflow_content):
-        """Workflow must use peaceiris/actions-gh-pages for deployment."""
-        assert "peaceiris/actions-gh-pages" in workflow_content, (
-            "static.yml does not reference peaceiris/actions-gh-pages"
+        assert not workflow_path.exists(), (
+            ".github/workflows/static.yml should be deleted after Pages move"
         )
 
-    def test_workflow_triggers_on_push_to_main(self, workflow_content):
-        """Workflow must trigger on push to the 'main' branch."""
-        assert 'branches: ["main"]' in workflow_content, (
-            'static.yml does not contain \'branches: ["main"]\' trigger'
+    def test_ci_workflow_retained(self):
+        """test.yml CI must still exist."""
+        assert (REPO_ROOT / ".github" / "workflows" / "test.yml").exists(), (
+            ".github/workflows/test.yml is missing"
         )
 
-    def test_workflow_supports_workflow_dispatch(self, workflow_content):
-        """Workflow must support manual triggering via workflow_dispatch."""
-        assert "workflow_dispatch" in workflow_content, (
-            "static.yml does not contain workflow_dispatch trigger"
+    def test_pages_headers_exists(self):
+        """_headers must exist at output root for Cloudflare Pages."""
+        assert (REPO_ROOT / "_headers").exists(), "_headers file does not exist"
+
+    def test_pages_redirects_exists(self):
+        """_redirects must exist at output root for www -> apex."""
+        content = (REPO_ROOT / "_redirects").read_text()
+        assert "www.jasonend.cloud" in content and "jasonend.cloud" in content, (
+            "_redirects should map www to apex"
         )

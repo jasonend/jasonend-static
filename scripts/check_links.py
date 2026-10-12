@@ -5,7 +5,8 @@ Checks:
 - No references to /wp-includes/ or /wp-admin/ (pruned).
 - Every internal href/src resolves to a file in the repo.
   (/about-jason/ -> about-jason/index.html, /sitemap.xml -> sitemap.xml, etc.)
-- CNAME matches deploy cname in .github/workflows/static.yml.
+- CNAME (if present during Pages transition) matches jasonend.cloud.
+  Legacy GitHub Pages mode (static.yml present) also checks deploy cname.
 
 Usage: python3 scripts/check_links.py
 """
@@ -61,16 +62,23 @@ def main() -> int:
             if url.startswith('/wp-content/themes/') and not resolve(url):
                 errors.append(f'{rel}: broken CSS url() {url}')
 
-    cname = (ROOT / 'CNAME').read_text().strip()
-    workflow = (ROOT / '.github' / 'workflows' / 'static.yml').read_text()
-    m = re.search(r'cname:\s*(\S+)', workflow)
-    if m and m.group(1) != cname:
-        errors.append(f'CNAME mismatch: file={cname!r} workflow={m.group(1)!r}')
+    cname_path = ROOT / 'CNAME'
+    if cname_path.exists():
+        cname = cname_path.read_text().strip()
+        workflow_path = ROOT / '.github' / 'workflows' / 'static.yml'
+        if workflow_path.exists():
+            # Legacy GitHub Pages mode: CNAME must match deploy cname.
+            workflow = workflow_path.read_text()
+            m = re.search(r'cname:\s*(\S+)', workflow)
+            if m and m.group(1) != cname:
+                errors.append(f'CNAME mismatch: file={cname!r} workflow={m.group(1)!r}')
+        elif cname != 'jasonend.cloud':
+            errors.append(f'CNAME should contain jasonend.cloud, got {cname!r}')
 
     if errors:
         print('\n'.join(errors))
         return 1
-    print(f'OK: {len(html_files)} pages, links resolve, CNAME={cname}')
+    print(f'OK: {len(html_files)} pages, links resolve')
     return 0
 
 
