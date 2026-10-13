@@ -112,9 +112,9 @@ class TestPagesHosting:
         """_headers must exist at output root for Cloudflare Pages."""
         assert (REPO_ROOT / "_headers").exists(), "_headers file does not exist"
 
-    def test_pages_redirects_exists(self):
-        """_redirects must exist at output root for www -> apex."""
-        content = (REPO_ROOT / "_redirects").read_text()
-        assert "www.jasonend.cloud" in content and "jasonend.cloud" in content, (
-            "_redirects should map www to apex"
+    def test_pages_redirects_absent(self):
+        """_redirects must NOT exist: www->apex lives in zone Redirect Rules,
+        and absolute-URL _redirects entries fail the build (API code 100324)."""
+        assert not (REPO_ROOT / "_redirects").exists(), (
+            "_redirects should be deleted; www redirects are zone-level rules"
         )
