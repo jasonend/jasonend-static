@@ -14,21 +14,17 @@ REPO_ROOT = pathlib.Path(__file__).parent.resolve()
 
 
 # ---------------------------------------------------------------------------
-# Requirement 3.2 – CNAME file
+# Requirement 3.2 – CNAME file removed (GitHub Pages unpublished;
+# Cloudflare Pages binds custom domains via API, not the CNAME file)
 # ---------------------------------------------------------------------------
 
 class TestCNAME:
-    """Validates: Requirements 3.2"""
+    """Validates: Requirements 3.2 (superseded – GitHub Pages off)"""
 
-    def test_cname_exists(self):
-        """CNAME file must be present at the repository root."""
-        assert (REPO_ROOT / "CNAME").exists(), "CNAME file does not exist"
-
-    def test_cname_contains_primary_domain(self):
-        """CNAME must contain exactly 'jasonend.cloud'."""
-        content = (REPO_ROOT / "CNAME").read_text().strip()
-        assert content == "jasonend.cloud", (
-            f"CNAME should contain 'jasonend.cloud', got '{content}'"
+    def test_cname_absent(self):
+        """CNAME file must NOT be present (GitHub Pages unpublished)."""
+        assert not (REPO_ROOT / "CNAME").exists(), (
+            "CNAME file should be deleted after GitHub Pages unpublish"
         )
 
 
